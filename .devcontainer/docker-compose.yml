@@ -1,0 +1,28 @@
+name: notter-backend
+
+services:
+  devcontainer:
+    build:
+      dockerfile: Dockerfile.devcontainer
+    volumes:
+      - ../:/workspaces/notter-backend:cached
+      - bash_history:/commandhistory
+    command: sleep infinity
+    depends_on:
+      - postgres
+
+  postgres:
+    build:
+      dockerfile: Dockerfile.postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: notter
+    ports:
+      - "5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+volumes:
+  bash_history:
+  postgres:

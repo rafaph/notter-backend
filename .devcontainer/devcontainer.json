@@ -1,0 +1,37 @@
+{
+    "name": "notter-backend",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "devcontainer",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+    "containerEnv": {
+      "PDM_IGNORE_ACTIVE_VENV": "1"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "codeium.codeium",
+                "ms-python.mypy-type-checker",
+                "charliermarsh.ruff",
+                "EditorConfig.EditorConfig",
+                "tamasfe.even-better-toml",
+                "natqe.reload"
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": ".venv/bin/python",
+                "mypy-type-checker.importStrategy": "fromEnvironment",
+                "files.exclude": {
+                  "**/__pycache__": true
+                },
+                "[python]": {
+                    "editor.defaultFormatter": "charliermarsh.ruff",
+                    "editor.formatOnSave": true,
+                    "editor.codeActionsOnSave": {
+                        "source.fixAll": "explicit",
+                        "source.organizeImports": "explicit"
+                    }
+                }
+            }
+        }
+    },
+    "postCreateCommand": "pdm install"
+}
