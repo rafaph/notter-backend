@@ -1,5 +1,6 @@
 import asyncio
 import os
+import secrets
 import signal
 import socket
 import subprocess
@@ -33,6 +34,7 @@ class ServerTest:
             env = {
                 **os.environ,
                 "DATABASE_URL": self._database_test.database_url,
+                "SECRET_KEY": secrets.token_hex(64),
                 "TESTING": "true",
             }
             self._process = subprocess.Popen(
