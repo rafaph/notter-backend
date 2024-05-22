@@ -27,7 +27,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install "pdm~=2.15"
-          python -m pdm install
+          pdm install --skip=:post
       - name: Install goose
         run: |
           chmod +x .devcontainer/install-goose.sh
