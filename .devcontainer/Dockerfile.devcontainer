@@ -8,3 +8,7 @@ RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhisto
     && chown -R $USERNAME /commandhistory \
     && echo "$SNIPPET" >> "/home/$USERNAME/.bashrc" \
     && pipx install "pdm~=2.15"
+
+COPY install-goose.sh /tmp/install-goose.sh
+
+RUN chmod +x /tmp/install-goose.sh && /tmp/install-goose.sh && rm -f /tmp/install-goose.sh

@@ -11,6 +11,10 @@ license = {text = "MIT"}
 dependencies = [
     "fastapi~=0.111.0",
     "pydantic[email]~=2.7",
+    "psycopg[pool]~=3.1",
+    "argon2-cffi~=23.1",
+    "pydantic-settings~=2.2",
+    "fastapi-lifespan-manager~=0.1.4",
 ]
 
 [tool.pdm]
@@ -32,6 +36,9 @@ test = [
     "pytest-cov~=5.0",
     "pytest-testdox~=3.1",
     "pytest-xdist[psutil]~=3.6",
+    "anyio~=4.3",
+    "faker~=25.2",
+    "httpx~=0.27.0",
 ]
 
 [tool.pdm.scripts]
@@ -42,6 +49,7 @@ lint = {composite = ["lint-ruff", "lint-mypy"]}
 test = "pytest tests -n auto"
 test-cov = "pytest tests -n auto --cov-branch --cov-fail-under=100 --cov=src --cov-report term --cov-report xml:coverage/coverage.xml --cov-report html:coverage --cov-report lcov:coverage/lcov.info"
 post_install = {shell = "pre-commit install -f --install-hooks 2>&1 1>/dev/null"}
+start = "fastapi dev src/main.py"
 
 [tool.ruff]
 target-version = "py312"

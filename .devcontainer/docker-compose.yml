@@ -4,6 +4,7 @@ services:
   devcontainer:
     build:
       dockerfile: Dockerfile.devcontainer
+      context: .
     volumes:
       - ../:/workspaces/notter-backend:cached
       - bash_history:/commandhistory

@@ -4,7 +4,7 @@
     "service": "devcontainer",
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
     "containerEnv": {
-      "PDM_IGNORE_ACTIVE_VENV": "1"
+        "PDM_IGNORE_ACTIVE_VENV": "1"
     },
     "customizations": {
         "vscode": {
@@ -14,13 +14,21 @@
                 "charliermarsh.ruff",
                 "EditorConfig.EditorConfig",
                 "tamasfe.even-better-toml",
-                "natqe.reload"
+                "natqe.reload",
+                "cweijan.vscode-postgresql-client2@7.3.8",
+                "ms-vscode.live-server"
             ],
             "settings": {
                 "python.defaultInterpreterPath": ".venv/bin/python",
+                "python.testing.pytestArgs": [
+                    "tests"
+                ],
+                "python.testing.unittestEnabled": false,
+                "python.testing.pytestEnabled": true,
+                "testing.showAllMessages": true,
                 "mypy-type-checker.importStrategy": "fromEnvironment",
                 "files.exclude": {
-                  "**/__pycache__": true
+                    "**/__pycache__": true
                 },
                 "[python]": {
                     "editor.defaultFormatter": "charliermarsh.ruff",
