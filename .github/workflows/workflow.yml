@@ -10,6 +10,7 @@ jobs:
       postgres:
         image: postgres:16
         env:
+          POSTGRES_HOSTNAME: postgres
           POSTGRES_USER: admin
           POSTGRES_PASSWORD: admin
           POSTGRES_DB: notter
