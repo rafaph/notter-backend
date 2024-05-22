@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     DATABASE_URL: PostgresDsn
     SECRET_KEY: str
     ALGORITHM: str
+    EXPIRATION_TIME_MINUTES: int
 
 
 try:

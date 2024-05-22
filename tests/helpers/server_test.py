@@ -18,10 +18,11 @@ from tests.helpers.database_test import DatabaseTest
 
 
 class ServerTest:
-    def __init__(self) -> None:
+    def __init__(self, env: dict[str, str] | None = None) -> None:
         self._process: subprocess.Popen[bytes] | None = None
         self._database_test = DatabaseTest()
         self._http_client = httpx.AsyncClient()
+        self._env = env or {}
 
     async def up(self) -> None:
         # up database
@@ -36,6 +37,8 @@ class ServerTest:
                 "DATABASE_URL": self._database_test.database_url,
                 "SECRET_KEY": secrets.token_hex(64),
                 "ALGORITHM": "HS512",
+                "EXPIRATION_TIME_MINUTES": "10",
+                **self._env,
                 "TESTING": "true",
             }
             self._process = subprocess.Popen(

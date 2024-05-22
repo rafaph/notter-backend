@@ -1,5 +1,7 @@
 import os
 
+from src.common.types import ExceptionHandlerEntry
+
 if os.getenv("TESTING") == "true":  # pragma: no cover
     from pytest_cov.embed import cleanup_on_sigterm  # type: ignore
 
@@ -15,7 +17,7 @@ from src.auth.drivers.rest.router import router as auth_router
 from src.common.drivers.rest.lifespans import lifespans as common_lifespans
 from src.common.drivers.rest.router import router as common_router
 
-exception_handlers = [
+exception_handlers: list[ExceptionHandlerEntry] = [
     *auth_exception_handlers,
 ]
 

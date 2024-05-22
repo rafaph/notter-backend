@@ -25,3 +25,8 @@ class CreateUserInput(BaseModel):
             first_name=self.first_name,
             last_name=self.last_name,
         )
+
+
+class AuthenticateInput(BaseModel):
+    email: EmailStr
+    password: str = Field(strict=True, min_length=1)

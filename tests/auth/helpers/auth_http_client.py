@@ -7,3 +7,6 @@ class AuthHttpClient:
 
     async def signup(self, body: dict[str, object]) -> httpx.Response:
         return await self._client.post("/auth/signup", json=body)
+
+    async def token(self, body: dict[str, object]) -> httpx.Response:
+        return await self._client.post("/auth/token", data=body)
