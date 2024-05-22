@@ -14,4 +14,4 @@ class CreateUserOutput(User):
 
 class AuthenticateOutput(BaseModel):
     access_token: str
-    token_type: str
+    token_type: str = "Bearer"
