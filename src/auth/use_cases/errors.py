@@ -1,5 +1,7 @@
 class UserNotFoundError(Exception):
-    def __init__(self, msg: str = "User not found") -> None:
+    def __init__(
+        self, msg: str = "User not found"
+    ) -> None:  # pragma: no cover
         super().__init__(msg)
 
 
