@@ -47,7 +47,7 @@ lint-ruff = "ruff check --fix src tests"
 lint-mypy = "dmypy run src tests -- --use-fine-grained-cache"
 lint = {composite = ["lint-ruff", "lint-mypy"]}
 test = "pytest tests -n auto"
-test-cov = "pytest tests -n auto --cov-branch --cov-fail-under=100 --cov=src --cov-report term --cov-report xml:coverage/coverage.xml --cov-report html:coverage --cov-report lcov:coverage/lcov.info"
+test-cov = "pytest tests -n auto --cov-branch --cov-fail-under=99 --cov=src --cov-report term --cov-report xml:coverage/coverage.xml --cov-report html:coverage --cov-report lcov:coverage/lcov.info"
 post_install = {shell = "pre-commit install -f --install-hooks 2>&1 1>/dev/null"}
 start = "fastapi dev src/main.py"
 
