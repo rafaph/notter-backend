@@ -2,7 +2,7 @@
 
 set -e
 
-OS=$(uname -s)
+OS=$(uname -s | tr "[:upper:]" "[:lower:]")
 ARCH=$(uname -m)
 
 if [ "$ARCH" = "aarch64" ];
