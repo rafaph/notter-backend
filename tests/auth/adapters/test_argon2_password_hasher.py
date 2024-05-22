@@ -8,17 +8,16 @@ from src.auth.adapters.argon2_password_hasher import Argon2PasswordHasher
 from src.auth.adapters.errors import HashingError
 
 
-@pytest.fixture(name="password_hasher")
-def fixture_password_hasher(faker: Faker) -> MagicMock:
-    password_hasher = MagicMock(spec=argon2.PasswordHasher)
-    password_hasher.verify.return_value = True
-    password_hasher.hash.return_value = str(faker.sha256())
-    password_hasher.check_needs_rehash.return_value = True
-    return password_hasher
-
-
 @pytest.mark.describe(Argon2PasswordHasher.__name__)
 class TestArgon2PasswordHasher:
+    @pytest.fixture()
+    def password_hasher(self, faker: Faker) -> MagicMock:
+        password_hasher = MagicMock(spec=argon2.PasswordHasher)
+        password_hasher.verify.return_value = True
+        password_hasher.hash.return_value = str(faker.sha256())
+        password_hasher.check_needs_rehash.return_value = True
+        return password_hasher
+
     @pytest.mark.it("Should verify password successfully")
     def test_verify_success(
         self,

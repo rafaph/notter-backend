@@ -49,7 +49,7 @@ class TestPyJwtManager:
         # then
         assert decoded_payload == payload
 
-    @pytest.mark.it("Should decode JWT failure (JWTError)")
+    @pytest.mark.it("Should decode JWT failure (InvalidSignatureError)")
     def test_decode_jwt_error(self) -> None:
         # given
         payload = TokenPayloadBuilder().build()
@@ -93,7 +93,7 @@ class TestPyJwtManager:
         )
         assert str(exc_info.value) == "Signature has expired"
 
-    @pytest.mark.it("Should decode JWT failure (JWTClaimsError)")
+    @pytest.mark.it("Should decode JWT failure (ImmatureSignatureError)")
     def test_decode_claims_error(self, faker: Faker) -> None:
         # given
         payload = (

@@ -5,32 +5,34 @@ if os.getenv("TESTING") == "true":  # pragma: no cover
 
     cleanup_on_sigterm()
 
-from fastapi import FastAPI, status
+from fastapi import FastAPI
+from fastapi_lifespan_manager import LifespanManager
 
 from src.auth.drivers.rest.exception_handlers import (
     exception_handlers as auth_exception_handlers,
 )
 from src.auth.drivers.rest.router import router as auth_router
-from src.common.drivers.rest.lifespan import lifespan
-
-app = FastAPI(lifespan=lifespan)
-
-app.include_router(auth_router)
+from src.common.drivers.rest.lifespans import lifespans as common_lifespans
+from src.common.drivers.rest.router import router as common_router
 
 exception_handlers = [
     *auth_exception_handlers,
 ]
 
+lifespans = [
+    *common_lifespans,
+]
+
+routers = [
+    auth_router,
+    common_router,
+]
+
+
+app = FastAPI(lifespan=LifespanManager(lifespans))
+
+for router in routers:
+    app.include_router(router)
+
 for exc, handler in exception_handlers:
     app.add_exception_handler(exc, handler)
-
-
-@app.get(
-    "/healthz",
-    tags=["common"],
-    status_code=status.HTTP_204_NO_CONTENT,
-    summary="Health check",
-    description="Health check operation",
-    response_description="Health checked successfully",
-)
-async def healthz() -> None: ...

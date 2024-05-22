@@ -35,6 +35,7 @@ class ServerTest:
                 **os.environ,
                 "DATABASE_URL": self._database_test.database_url,
                 "SECRET_KEY": secrets.token_hex(64),
+                "ALGORITHM": "HS512",
                 "TESTING": "true",
             }
             self._process = subprocess.Popen(
@@ -103,7 +104,7 @@ class ServerTest:
         raise Exception(msg)
 
     async def _health_check(
-        self, tries: int = 600, delay: float = 0.1
+        self, tries: int = 300, delay: float = 0.1
     ) -> None:
         for _ in range(tries):
             try:
@@ -114,7 +115,7 @@ class ServerTest:
                 pass
             await asyncio.sleep(delay)
 
-        msg = "Server not up"
+        msg = "Server is not healthy"
         raise Exception(msg)
 
     def _kill_process(self) -> None:
