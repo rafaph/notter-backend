@@ -1,4 +1,5 @@
 from typing import cast
+from uuid import UUID, uuid4
 
 import pytest
 from faker import Faker
@@ -103,3 +104,50 @@ class TestPostgresUserRepository:
             # when/then
             with pytest.raises(DatabaseError):
                 await sut.find_by_email(email)
+
+    @pytest.mark.it("Should find an user by id (return user)")
+    async def test_find_by_id(self) -> None:
+        async with DatabaseTest() as pool:
+            # given
+            client = AuthDatabaseClient(pool)
+            user = UserBuilder().build()
+            await client.create_user(user)
+
+            # and
+            sut = PostgresUserRepository(pool)
+
+            # when
+            user_from_db = await sut.find_by_id(user.id)
+
+            # then
+            assert user_from_db is not None
+
+            # and
+            assert user == user_from_db
+
+    @pytest.mark.it("Should NOT find an user by id (return none)")
+    async def test_find_by_id_return_none(self) -> None:
+        async with DatabaseTest() as pool:
+            # given
+            user_id = uuid4()
+            sut = PostgresUserRepository(pool)
+
+            # when
+            user_from_db = await sut.find_by_id(user_id)
+
+            # then
+            assert user_from_db is None
+
+    @pytest.mark.it("Should NOT find an user by id (raise database error)")
+    async def test_find_by_id_raise_database_error(
+        self,
+        faker: Faker,
+    ) -> None:
+        async with DatabaseTest() as pool:
+            # given
+            user_id = cast(UUID, faker.boolean())
+            sut = PostgresUserRepository(pool)
+
+            # when/then
+            with pytest.raises(DatabaseError):
+                await sut.find_by_id(user_id)

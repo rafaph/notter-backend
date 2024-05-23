@@ -1,4 +1,3 @@
-import argon2
 import pytest
 from faker import Faker
 from fastapi import status
@@ -16,10 +15,8 @@ class TestToken:
     async def test_token_ok(self, faker: Faker) -> None:
         async with ServerTest() as (http_client, pool):
             # given
-            password_hasher = argon2.PasswordHasher()
             raw_password = faker.password()
-            password = password_hasher.hash(raw_password)
-            user = UserBuilder().with_password(password).build()
+            user = UserBuilder().with_hashed_password(raw_password).build()
 
             # and
             auth_database_client = AuthDatabaseClient(pool)
@@ -77,10 +74,8 @@ class TestToken:
     async def test_token_unauthorized_password(self, faker: Faker) -> None:
         async with ServerTest() as (http_client, pool):
             # given
-            password_hasher = argon2.PasswordHasher()
             raw_password = faker.password()
-            password = password_hasher.hash(raw_password)
-            user = UserBuilder().with_password(password).build()
+            user = UserBuilder().with_hashed_password(raw_password).build()
 
             # and
             auth_database_client = AuthDatabaseClient(pool)

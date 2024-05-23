@@ -26,5 +26,5 @@ class JwtManager(ABC):
         raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
-    def decode(self, token: str) -> TokenPayload:
+    def decode(self, token: str) -> TokenPayload | None:
         raise NotImplementedError  # pragma: no cover

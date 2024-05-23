@@ -1,6 +1,8 @@
 from datetime import datetime
 from uuid import UUID
 
+import argon2
+
 from tests.helpers.builder import Builder
 
 from src.auth.domain.entities.user import User
@@ -14,6 +16,7 @@ class UserBuilder(Builder[User]):
             "first_name": self._faker.first_name(),
             "last_name": self._faker.last_name(),
         }
+        self._hasher = argon2.PasswordHasher()
 
     def with_id(self, id_: UUID | str) -> "UserBuilder":
         if isinstance(id_, str):
@@ -27,6 +30,10 @@ class UserBuilder(Builder[User]):
 
     def with_password(self, password: str) -> "UserBuilder":
         self._data["password"] = password
+        return self
+
+    def with_hashed_password(self, password: str) -> "UserBuilder":
+        self._data["password"] = self._hasher.hash(password)
         return self
 
     def with_first_name(self, first_name: str) -> "UserBuilder":

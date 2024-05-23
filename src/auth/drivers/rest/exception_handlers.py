@@ -7,7 +7,7 @@ from starlette.types import ExceptionHandler
 from src.auth.use_cases.errors import (
     EmailAlreadyExistsError,
     InvalidCredentialsError,
-    UserNotFoundError,
+    InvalidTokenError,
 )
 from src.common.types import ExceptionHandlerEntry
 
@@ -29,15 +29,18 @@ def _create_handler(
 
 exception_handlers: list[ExceptionHandlerEntry] = [
     (
-        UserNotFoundError,
-        _create_handler(status.HTTP_404_NOT_FOUND),
-    ),
-    (
         EmailAlreadyExistsError,
         _create_handler(status.HTTP_409_CONFLICT),
     ),
     (
         InvalidCredentialsError,
+        _create_handler(
+            status.HTTP_401_UNAUTHORIZED,
+            headers={"WWW-Authenticate": "Bearer"},
+        ),
+    ),
+    (
+        InvalidTokenError,
         _create_handler(
             status.HTTP_401_UNAUTHORIZED,
             headers={"WWW-Authenticate": "Bearer"},

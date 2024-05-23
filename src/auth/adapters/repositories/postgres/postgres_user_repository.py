@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from psycopg import errors
 
 from src.auth.domain.entities.user import User
@@ -39,6 +41,21 @@ class PostgresUserRepository(PostgresRepository, UserRepository):
             cursor = await self._query(
                 "SELECT * FROM users WHERE email = %s;",
                 [email],
+            )
+            result = await cursor.fetchall()
+        except errors.Error as error:
+            raise DatabaseError(error) from error
+
+        if len(result) == 0:
+            return None
+
+        return User.model_validate(result[0])
+
+    async def find_by_id(self, user_id: UUID) -> User | None:
+        try:
+            cursor = await self._query(
+                "SELECT * FROM users WHERE id = %s;",
+                [user_id],
             )
             result = await cursor.fetchall()
         except errors.Error as error:

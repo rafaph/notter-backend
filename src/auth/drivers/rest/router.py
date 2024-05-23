@@ -2,15 +2,21 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
+from src.auth.domain.entities.user import User
 from src.auth.drivers.rest.dependencies import (
     get_authenticate_input,
     get_authenticate_use_case,
     get_create_user_use_case,
+    get_user_from_token,
 )
 from src.auth.use_cases.authenticate_use_case import AuthenticateUseCase
 from src.auth.use_cases.create_user_use_case import CreateUserUseCase
 from src.auth.use_cases.inputs import AuthenticateInput, CreateUserInput
-from src.auth.use_cases.output import AuthenticateOutput, CreateUserOutput
+from src.auth.use_cases.output import (
+    AuthenticateOutput,
+    CreateUserOutput,
+    GetProfileOutput,
+)
 from src.common.drivers.rest.errors import ErrorResponse
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -69,3 +75,28 @@ async def post_token(
     ],
 ) -> AuthenticateOutput:
     return await authenticate(data)
+
+
+@router.get(
+    "/profile",
+    status_code=status.HTTP_200_OK,
+    response_model=GetProfileOutput,
+    summary="Get authenticated user profile",
+    responses={
+        status.HTTP_200_OK: {
+            "description": "User profile data",
+            "model": GetProfileOutput,
+        },
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "Not authorized",
+            "model": ErrorResponse,
+        },
+    },
+)
+def get_profile(
+    user: Annotated[
+        User,
+        Depends(get_user_from_token),
+    ],
+) -> GetProfileOutput:
+    return GetProfileOutput.from_user(user)

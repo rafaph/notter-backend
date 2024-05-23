@@ -6,7 +6,6 @@ from faker import Faker
 
 from tests.auth.builders.ports.token_payload_builder import TokenPayloadBuilder
 
-from src.auth.adapters.errors import JwtError
 from src.auth.adapters.py_jwt_manager import PyJwtManager
 
 
@@ -15,7 +14,7 @@ class TestPyJwtManager:
     _algorithm = "HS512"
     _secret_key = secrets.token_hex(64)
 
-    @pytest.mark.it("Should generate JWT successfully")
+    @pytest.mark.it("Should encode JWT successfully")
     def test_generate_jwt(self) -> None:
         # given
         payload = TokenPayloadBuilder().build()
@@ -49,70 +48,65 @@ class TestPyJwtManager:
         # then
         assert decoded_payload == payload
 
-    @pytest.mark.it("Should decode JWT failure (InvalidSignatureError)")
+    @pytest.mark.it("Should fail when decoding JWT (InvalidSignatureError)")
     def test_decode_jwt_error(self) -> None:
         # given
-        payload = TokenPayloadBuilder().build()
+        encoded_payload = (
+            TokenPayloadBuilder().build().model_dump(exclude_none=True)
+        )
         token = jwt.encode(
-            payload.model_dump(exclude_none=True),
+            encoded_payload,
             key=secrets.token_hex(64),
             algorithm=self._algorithm,
         )
         sut = PyJwtManager(self._secret_key, self._algorithm)
 
-        # when/then
-        with pytest.raises(JwtError) as exc_info:
-            sut.decode(token)
+        # when
+        payload = sut.decode(token)
 
-        # and
-        assert isinstance(
-            exc_info.value.error,
-            jwt.exceptions.InvalidSignatureError,
-        )
-        assert str(exc_info.value) == "Signature verification failed"
+        # then
+        assert payload is None
 
-    @pytest.mark.it("Should decode JWT failure (ExpiredSignatureError)")
+    @pytest.mark.it("Should fail when decoding JWT (ExpiredSignatureError)")
     def test_decode_expired_signature(self, faker: Faker) -> None:
         # given
-        payload = TokenPayloadBuilder().with_exp(faker.past_datetime()).build()
+        encoded_payload = (
+            TokenPayloadBuilder()
+            .with_exp(faker.past_datetime())
+            .build()
+            .model_dump(exclude_none=True)
+        )
         token = jwt.encode(
-            payload.model_dump(exclude_none=True),
+            encoded_payload,
             key=self._secret_key,
             algorithm=self._algorithm,
         )
         sut = PyJwtManager(self._secret_key, self._algorithm)
 
-        # when/then
-        with pytest.raises(JwtError) as exc_info:
-            sut.decode(token)
+        # when
+        payload = sut.decode(token)
 
-        # and
-        assert isinstance(
-            exc_info.value.error,
-            jwt.exceptions.ExpiredSignatureError,
-        )
-        assert str(exc_info.value) == "Signature has expired"
+        # then
+        assert payload is None
 
-    @pytest.mark.it("Should decode JWT failure (ImmatureSignatureError)")
+    @pytest.mark.it("Should fail when decoding JWT (ImmatureSignatureError)")
     def test_decode_claims_error(self, faker: Faker) -> None:
         # given
-        payload = (
-            TokenPayloadBuilder().with_nbf(faker.future_datetime()).build()
+        encoded_payload = (
+            TokenPayloadBuilder()
+            .with_nbf(faker.future_datetime())
+            .build()
+            .model_dump(exclude_none=True)
         )
         token = jwt.encode(
-            payload.model_dump(exclude_none=True),
+            encoded_payload,
             key=self._secret_key,
             algorithm=self._algorithm,
         )
         sut = PyJwtManager(self._secret_key, self._algorithm)
 
-        # when/then
-        with pytest.raises(JwtError) as exc_info:
-            sut.decode(token)
+        # when
+        payload = sut.decode(token)
 
-        # and
-        assert isinstance(
-            exc_info.value.error,
-            jwt.exceptions.ImmatureSignatureError,
-        )
-        assert str(exc_info.value) == "The token is not yet valid (nbf)"
+        # then
+        assert payload is None
