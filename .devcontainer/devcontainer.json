@@ -23,6 +23,7 @@
                 "ms-vscode.live-server"
             ],
             "settings": {
+                "http.proxyStrictSSL": false,
                 "python.defaultInterpreterPath": ".venv/bin/python",
                 "python.testing.pytestArgs": [
                     "tests"
