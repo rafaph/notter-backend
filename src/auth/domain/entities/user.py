@@ -3,9 +3,7 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, EmailStr, Field
 
-
-def _now() -> datetime.datetime:
-    return datetime.datetime.now(datetime.UTC).replace(microsecond=0)
+from src.common.datetime import Datetime
 
 
 class User(BaseModel):
@@ -14,5 +12,11 @@ class User(BaseModel):
     password: str = Field(strict=True, min_length=1)
     first_name: str = Field(strict=True, min_length=1)
     last_name: str = Field(strict=True, min_length=1)
-    updated_at: datetime.datetime = Field(strict=True, default_factory=_now)
-    created_at: datetime.datetime = Field(strict=True, default_factory=_now)
+    updated_at: datetime.datetime = Field(
+        strict=True,
+        default_factory=Datetime.now,
+    )
+    created_at: datetime.datetime = Field(
+        strict=True,
+        default_factory=Datetime.now,
+    )

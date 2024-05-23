@@ -1,4 +1,4 @@
-import datetime
+from datetime import timedelta
 
 from src.auth.ports.jwt_manager import JwtManager, TokenPayload
 from src.auth.ports.password_hasher import PasswordHasher
@@ -6,6 +6,7 @@ from src.auth.ports.repositories.user_repository import UserRepository
 from src.auth.use_cases.errors import InvalidCredentialsError
 from src.auth.use_cases.inputs import AuthenticateInput
 from src.auth.use_cases.output import AuthenticateOutput
+from src.common.datetime import Datetime
 from src.common.settings import settings
 
 
@@ -29,10 +30,8 @@ class AuthenticateUseCase:
         if not self._password_hasher.verify(user.password, data.password):
             raise InvalidCredentialsError()
 
-        now = datetime.datetime.now(datetime.UTC).replace(microsecond=0)
-        exp = now + datetime.timedelta(
-            minutes=settings.EXPIRATION_TIME_MINUTES,
-        )
+        now = Datetime.now()
+        exp = now + timedelta(minutes=settings.EXPIRATION_TIME_MINUTES)
         token_payload = TokenPayload(
             sub=user.id,
             exp=exp,
