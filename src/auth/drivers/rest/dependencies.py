@@ -65,8 +65,8 @@ def get_create_user_use_case(
 @cache
 def get_jwt_manager() -> JwtManager:
     return PyJwtManager(
-        settings.SECRET_KEY,
-        settings.ALGORITHM,
+        settings.JWT_SECRET_KEY,
+        settings.JWT_ALGORITHM,
     )
 
 

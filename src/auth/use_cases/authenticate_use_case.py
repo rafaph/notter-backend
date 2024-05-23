@@ -31,7 +31,7 @@ class AuthenticateUseCase:
             raise InvalidCredentialsError()
 
         now = Datetime.now()
-        exp = now + timedelta(minutes=settings.EXPIRATION_TIME_MINUTES)
+        exp = now + timedelta(minutes=settings.JWT_EXPIRATION_TIME_MINUTES)
         token_payload = TokenPayload(
             sub=user.id,
             exp=exp,

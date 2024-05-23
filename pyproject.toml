@@ -16,6 +16,8 @@ dependencies = [
     "pydantic-settings~=2.2",
     "fastapi-lifespan-manager~=0.1.4",
     "PyJWT~=2.8",
+    "python-json-logger~=2.0",
+    "pydash~=8.0",
 ]
 
 [tool.pdm]
@@ -50,7 +52,7 @@ lint = {composite = ["lint-ruff", "lint-mypy"]}
 test = "pytest tests"
 test-cov = "pytest tests -n auto --cov-branch --cov-fail-under=99 --cov=src --cov-report term --cov-report xml:coverage/coverage.xml --cov-report html:coverage --cov-report lcov:coverage/lcov.info"
 post_install = "pre-commit install -f --install-hooks"
-start = "fastapi dev src/main.py"
+start = "python main.py"
 
 [tool.ruff]
 target-version = "py312"

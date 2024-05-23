@@ -18,7 +18,7 @@ class TestProfile:
     @pytest.mark.it(f"Should return {status.HTTP_200_OK} OK")
     async def test_profile_ok(self, faker: Faker) -> None:
         secret_key = secrets.token_hex(64)
-        env = {"SECRET_KEY": secret_key}
+        env = {"JWT_SECRET_KEY": secret_key}
         async with ServerTest(env) as (http_client, pool):
             # given
             raw_password = faker.password()
@@ -83,7 +83,7 @@ class TestProfile:
     )
     async def test_profile_unauthorized_user_not_found(self) -> None:
         secret_key = secrets.token_hex(64)
-        env = {"SECRET_KEY": secret_key}
+        env = {"JWT_SECRET_KEY": secret_key}
         async with ServerTest(env) as (http_client, _):
             # given
             user_id = uuid4()

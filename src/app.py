@@ -1,12 +1,3 @@
-import os
-
-from src.common.types import ExceptionHandlerEntry
-
-if os.getenv("TESTING") == "true":  # pragma: no cover
-    from pytest_cov.embed import cleanup_on_sigterm  # type: ignore
-
-    cleanup_on_sigterm()
-
 from fastapi import FastAPI
 from fastapi_lifespan_manager import LifespanManager
 
@@ -16,6 +7,7 @@ from src.auth.drivers.rest.exception_handlers import (
 from src.auth.drivers.rest.router import router as auth_router
 from src.common.drivers.rest.lifespans import lifespans as common_lifespans
 from src.common.drivers.rest.router import router as common_router
+from src.common.types import ExceptionHandlerEntry
 
 exception_handlers: list[ExceptionHandlerEntry] = [
     *auth_exception_handlers,

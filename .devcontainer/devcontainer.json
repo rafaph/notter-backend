@@ -5,10 +5,14 @@
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
     "containerEnv": {
         "PDM_IGNORE_ACTIVE_VENV": "1",
-        "SECRET_KEY": "cf17aacdb4f5eb3905e1f777bae8e9d23b9724ccfe2ae114c5271e26548e14ea0e0bdba86cdbeb3db3e1d0438f429a7ea88cc42dd8c20ac081432e3fcf2a6454",
-        "ALGORITHM": "HS512",
         "DATABASE_URL": "postgres://admin:admin@postgres:5432/notter",
-        "EXPIRATION_TIME_MINUTES": "10"
+        "JWT_SECRET_KEY": "cf17aacdb4f5eb3905e1f777bae8e9d23b9724ccfe2ae114c5271e26548e14ea0e0bdba86cdbeb3db3e1d0438f429a7ea88cc42dd8c20ac081432e3fcf2a6454",
+        "JWT_ALGORITHM": "HS512",
+        "JWT_EXPIRATION_TIME_MINUTES": "10",
+        "SERVER_HOST": "127.0.0.1",
+        "SERVER_PORT": "8000",
+        "SERVER_RELOAD": "true",
+        "ENV": "dev"
     },
     "customizations": {
         "vscode": {

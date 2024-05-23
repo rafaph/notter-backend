@@ -4,6 +4,7 @@ import secrets
 import signal
 import socket
 import subprocess
+import sys
 import time
 from pathlib import Path
 from types import TracebackType
@@ -34,23 +35,20 @@ class ServerTest:
             port = self._get_free_port()
             env = {
                 **os.environ,
-                "DATABASE_URL": self._database_test.database_url,
-                "SECRET_KEY": secrets.token_hex(64),
-                "ALGORITHM": "HS512",
-                "EXPIRATION_TIME_MINUTES": "10",
+                "JWT_SECRET_KEY": secrets.token_hex(64),
+                "JWT_ALGORITHM": "HS512",
+                "JWT_EXPIRATION_TIME_MINUTES": "10",
                 **self._env,
-                "TESTING": "true",
+                "DATABASE_URL": self._database_test.database_url,
+                "SERVER_HOST": "127.0.0.1",
+                "SERVER_PORT": port,
+                "SERVER_RELOAD": "false",
+                "ENV": "test",
             }
             self._process = subprocess.Popen(
                 [
-                    ".venv/bin/fastapi",
-                    "run",
-                    "--no-reload",
-                    "--host",
-                    "127.0.0.1",
-                    "--port",
-                    port,
-                    "src/main.py",
+                    sys.executable,
+                    "main.py",
                 ],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
