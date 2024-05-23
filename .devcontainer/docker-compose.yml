@@ -3,7 +3,7 @@ name: notter-backend
 services:
   devcontainer:
     build:
-      dockerfile: Dockerfile.devcontainer
+      dockerfile: devcontainer.Dockerfile
       context: .
     volumes:
       - ../:/workspaces/notter-backend:cached
@@ -14,7 +14,7 @@ services:
 
   postgres:
     build:
-      dockerfile: Dockerfile.postgres
+      dockerfile: postgres.Dockerfile
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
