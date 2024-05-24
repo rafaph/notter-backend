@@ -1,0 +1,9 @@
+{
+    "description": "Enable `pdm shell` command",
+    "id": "pdm-shell",
+    "dependsOn": {
+        "ghcr.io/devcontainers-contrib/features/pdm:2": {}
+    },
+    "name": "pdm-shell",
+    "version": "1.0.0"
+}
