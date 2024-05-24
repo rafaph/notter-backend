@@ -1,4 +1,8 @@
+import os
+
 import pytest
+
+os.environ["LOG_LEVEL"] = "ERROR"
 
 
 @pytest.fixture()
