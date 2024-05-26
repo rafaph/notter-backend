@@ -11,13 +11,14 @@ license = {text = "MIT"}
 dependencies = [
     "fastapi~=0.111.0",
     "pydantic[email]~=2.7",
-    "psycopg[pool]~=3.1",
     "argon2-cffi~=23.1",
     "pydantic-settings~=2.2",
     "fastapi-lifespan-manager~=0.1.4",
     "PyJWT~=2.8",
     "python-json-logger~=2.0",
     "pydash~=8.0",
+    "psycopg[binary]~=3.1",
+    "psycopg-pool~=3.2",
 ]
 
 [tool.pdm]
@@ -32,7 +33,7 @@ name = "pypi"
 lint = [
     "mypy~=1.10",
     "pre-commit~=3.7",
-    "ruff~=0.4.4",
+    "ruff~=0.4.5",
 ]
 test = [
     "pytest~=8.2",
