@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from src.auth.domain.entities.user import User
+from src.auth.domain.entities import User
 from src.auth.ports.password_hasher import PasswordHasher
 from src.auth.ports.repositories.user_repository import UserRepository
 from src.auth.use_cases.errors import EmailAlreadyExistsError

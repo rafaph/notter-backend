@@ -13,7 +13,7 @@ from src.auth.adapters.py_jwt_manager import PyJwtManager
 from src.auth.adapters.repositories.postgres.postgres_user_repository import (
     PostgresUserRepository,
 )
-from src.auth.domain.entities.user import User
+from src.auth.domain.entities import User
 from src.auth.ports.jwt_manager import JwtManager
 from src.auth.ports.password_hasher import PasswordHasher
 from src.auth.ports.repositories.user_repository import UserRepository

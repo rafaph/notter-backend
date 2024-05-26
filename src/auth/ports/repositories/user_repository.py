@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Awaitable
 from uuid import UUID
 
-from src.auth.domain.entities.user import User
+from src.auth.domain.entities import User
 
 
 class UserRepository(ABC):

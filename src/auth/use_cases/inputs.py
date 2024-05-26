@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field, model_validator
 
-from src.auth.domain.entities.user import User
+from src.auth.domain.entities import User
 from src.auth.ports.password_hasher import PasswordHasher
 
 

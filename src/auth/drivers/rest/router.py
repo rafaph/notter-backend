@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
-from src.auth.domain.entities.user import User
+from src.auth.domain.entities import User
 from src.auth.drivers.rest.dependencies import (
     get_authenticate_input,
     get_authenticate_use_case,

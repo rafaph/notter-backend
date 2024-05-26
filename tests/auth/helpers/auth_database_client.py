@@ -2,7 +2,7 @@ from uuid import UUID
 
 from tests.helpers.database_client import DatabaseClient
 
-from src.auth.domain.entities.user import User
+from src.auth.domain.entities import User
 
 
 class AuthDatabaseClient(DatabaseClient):

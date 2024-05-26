@@ -1,4 +1,4 @@
-from src.auth.domain.entities.user import User
+from src.auth.domain.entities import User
 from src.auth.ports.jwt_manager import JwtManager
 from src.auth.ports.repositories.user_repository import UserRepository
 from src.auth.use_cases.errors import (

@@ -3,7 +3,7 @@ from typing import Self
 from pydantic import BaseModel, Field
 from pydantic.json_schema import SkipJsonSchema
 
-from src.auth.domain.entities.user import User
+from src.auth.domain.entities import User
 
 
 class CreateUserOutput(User):

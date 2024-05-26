@@ -2,7 +2,7 @@ from uuid import UUID
 
 from psycopg import errors
 
-from src.auth.domain.entities.user import User
+from src.auth.domain.entities import User
 from src.auth.ports.repositories.user_repository import UserRepository
 from src.common.adapters.errors import DatabaseError
 from src.common.adapters.postgres.postgres_repository import PostgresRepository

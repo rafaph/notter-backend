@@ -5,7 +5,7 @@ import argon2
 
 from tests.helpers.builder import Builder
 
-from src.auth.domain.entities.user import User
+from src.auth.domain.entities import User
 
 
 class UserBuilder(Builder[User]):
