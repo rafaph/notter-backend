@@ -2,7 +2,7 @@ name: notter-backend
 
 services:
   devcontainer:
-    image: mcr.microsoft.com/devcontainers/python:1-3.12-bookworm
+    image: ghcr.io/rafaph/devcontainer-images:base-ubuntu
     volumes:
       - ../:/workspaces/notter-backend:cached
     command: sleep infinity

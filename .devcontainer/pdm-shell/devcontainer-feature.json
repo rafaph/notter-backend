@@ -1,9 +1,10 @@
 {
     "description": "Enable `pdm shell` command",
     "id": "pdm-shell",
-    "dependsOn": {
-        "ghcr.io/devcontainers-contrib/features/pdm:2": {}
-    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/python",
+        "ghcr.io/stuartleeks/dev-container-features/shell-history"
+    ],
     "name": "pdm-shell",
     "version": "1.0.0"
 }

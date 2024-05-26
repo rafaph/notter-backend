@@ -4,10 +4,16 @@
     "service": "devcontainer",
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
     "features": {
-        "ghcr.io/rafaph/devcontainer-features/goose-cli:1": {},
+        "ghcr.io/devcontainers/features/python:1": {
+            "version": "3.12",
+            "installTools": "true",
+            "toolsToInstall": "pdm~=2.15"
+        },
         "ghcr.io/stuartleeks/dev-container-features/shell-history:0": {},
         "./pdm-shell": {}
+
     },
+    "remoteUser": "vscode",
     "containerEnv": {
         "PDM_IGNORE_ACTIVE_VENV": "1",
         "DATABASE_URL": "postgres://admin:admin@postgres:5432/notter",
@@ -33,6 +39,7 @@
             ],
             "settings": {
                 "http.proxyStrictSSL": false,
+                "terminal.integrated.fontFamily": "Roboto Mono for Powerline",
                 "python.defaultInterpreterPath": ".venv/bin/python",
                 "python.terminal.activateEnvironment": false,
                 "python.testing.pytestArgs": [
