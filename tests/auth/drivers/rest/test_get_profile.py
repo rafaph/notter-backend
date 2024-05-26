@@ -14,26 +14,27 @@ from tests.helpers.server_test import ServerTest
 
 @pytest.mark.anyio(scope="class")
 @pytest.mark.describe("GET /auth/profile")
-class TestProfile:
+class TestGetProfile:
     @pytest.mark.it(f"Should return {status.HTTP_200_OK} OK")
     async def test_profile_ok(self, faker: Faker) -> None:
         secret_key = secrets.token_hex(64)
         env = {"JWT_SECRET_KEY": secret_key}
         async with ServerTest(env) as (http_client, pool):
             # given
-            raw_password = faker.password()
-            user = UserBuilder().with_hashed_password(raw_password).build()
-            token = generate_token(user.id, secret_key=secret_key)
-
-            # and
-            auth_database_client = AuthDatabaseClient(pool)
-            await auth_database_client.create_user(user)
-
-            # and
             auth_client = AuthHttpClient(http_client)
+            auth_database_client = AuthDatabaseClient(pool)
+
+            # and
+            current_user = (
+                UserBuilder().with_hashed_password(faker.password()).build()
+            )
+            await auth_database_client.create_user(current_user)
+
+            # and
+            token = generate_token(current_user.id, secret_key=secret_key)
 
             # when
-            response = await auth_client.profile(token)
+            response = await auth_client.get_profile(token)
 
             # then
             assert response.status_code == status.HTTP_200_OK
@@ -48,7 +49,7 @@ class TestProfile:
                 "updated_at",
                 "created_at",
             ]
-            user_dict = user.model_dump(mode="json")
+            user_dict = current_user.model_dump(mode="json")
             for field in fields:
                 assert field in output
                 assert field in user_dict
@@ -64,15 +65,15 @@ class TestProfile:
     async def test_profile_unauthorized_token(self) -> None:
         async with ServerTest() as (http_client, _):
             # given
+            auth_client = AuthHttpClient(http_client)
+
+            # and
             secret_key = secrets.token_hex(64)
             user_id = uuid4()
             token = generate_token(user_id, secret_key=secret_key)
 
-            # and
-            auth_client = AuthHttpClient(http_client)
-
             # when
-            response = await auth_client.profile(token)
+            response = await auth_client.get_profile(token)
 
             # then
             assert response.status_code == status.HTTP_401_UNAUTHORIZED
@@ -86,14 +87,14 @@ class TestProfile:
         env = {"JWT_SECRET_KEY": secret_key}
         async with ServerTest(env) as (http_client, _):
             # given
+            auth_client = AuthHttpClient(http_client)
+
+            # and
             user_id = uuid4()
             token = generate_token(user_id, secret_key=secret_key)
 
-            # and
-            auth_client = AuthHttpClient(http_client)
-
             # when
-            response = await auth_client.profile(token)
+            response = await auth_client.get_profile(token)
 
             # then
             assert response.status_code == status.HTTP_401_UNAUTHORIZED

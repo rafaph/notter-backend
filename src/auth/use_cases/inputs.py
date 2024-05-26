@@ -30,3 +30,50 @@ class CreateUserInput(BaseModel):
 class AuthenticateInput(BaseModel):
     email: EmailStr
     password: str = Field(strict=True, min_length=1)
+
+
+class UpdateUserInput(BaseModel):
+    email: EmailStr | None = None
+    password: str | None = Field(
+        strict=True,
+        min_length=1,
+        default=None,
+    )
+    password_confirmation: str | None = Field(
+        strict=True,
+        min_length=1,
+        default=None,
+    )
+    first_name: str | None = Field(
+        strict=True,
+        min_length=1,
+        default=None,
+    )
+    last_name: str | None = Field(
+        strict=True,
+        min_length=1,
+        default=None,
+    )
+
+    @model_validator(mode="after")
+    def _passwords_validator(self) -> "UpdateUserInput":
+        if self.password != self.password_confirmation:
+            msg = "passwords do not match"
+            raise ValueError(msg)
+        return self
+
+    def to_user(
+        self,
+        current_user: User,
+        password_hasher: PasswordHasher,
+    ) -> User:
+        return User(
+            id=current_user.id,
+            email=self.email or current_user.email,
+            password=self.password
+            and password_hasher.hash(self.password)
+            or current_user.password,
+            first_name=self.first_name or current_user.first_name,
+            last_name=self.last_name or current_user.last_name,
+            created_at=current_user.created_at,
+        )

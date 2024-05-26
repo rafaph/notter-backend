@@ -22,9 +22,11 @@ class TestPostgresUserRepository:
     async def test_create_user(self) -> None:
         async with DatabaseTest() as pool:
             # given
-            user = UserBuilder().build()
             client = AuthDatabaseClient(pool)
             sut = PostgresUserRepository(pool)
+
+            # and
+            user = UserBuilder().build()
 
             # when
             await sut.create(user)
@@ -37,16 +39,18 @@ class TestPostgresUserRepository:
     async def test_create_raise_database_error(self) -> None:
         async with DatabaseTest() as pool:
             # given
-            user = UserBuilder().build()
             client = AuthDatabaseClient(pool)
-            await client.create_user(user)
             sut = PostgresUserRepository(pool)
 
-            # when
+            # and
+            user = UserBuilder().build()
+            await client.create_user(user)
+
+            # when/then
             with pytest.raises(DatabaseError) as exc_info:
                 await sut.create(user)
 
-            # then
+            # and
             error = exc_info.value
             assert isinstance(error.error, errors.UniqueViolation)
             assert str(error)
@@ -60,11 +64,11 @@ class TestPostgresUserRepository:
         async with DatabaseTest() as pool:
             # given
             client = AuthDatabaseClient(pool)
-            user = UserBuilder().build()
-            await client.create_user(user)
+            sut = PostgresUserRepository(pool)
 
             # and
-            sut = PostgresUserRepository(pool)
+            user = UserBuilder().build()
+            await client.create_user(user)
 
             # when
             user_from_db = await sut.find_by_email(user.email)
@@ -82,8 +86,10 @@ class TestPostgresUserRepository:
     ) -> None:
         async with DatabaseTest() as pool:
             # given
-            email = faker.email()
             sut = PostgresUserRepository(pool)
+
+            # and
+            email = faker.email()
 
             # when
             user_from_db = await sut.find_by_email(email)
@@ -98,8 +104,10 @@ class TestPostgresUserRepository:
     ) -> None:
         async with DatabaseTest() as pool:
             # given
-            email = cast(str, faker.boolean())
             sut = PostgresUserRepository(pool)
+
+            # and
+            email = cast(str, faker.boolean())
 
             # when/then
             with pytest.raises(DatabaseError):
@@ -110,11 +118,11 @@ class TestPostgresUserRepository:
         async with DatabaseTest() as pool:
             # given
             client = AuthDatabaseClient(pool)
-            user = UserBuilder().build()
-            await client.create_user(user)
+            sut = PostgresUserRepository(pool)
 
             # and
-            sut = PostgresUserRepository(pool)
+            user = UserBuilder().build()
+            await client.create_user(user)
 
             # when
             user_from_db = await sut.find_by_id(user.id)
@@ -129,8 +137,10 @@ class TestPostgresUserRepository:
     async def test_find_by_id_return_none(self) -> None:
         async with DatabaseTest() as pool:
             # given
-            user_id = uuid4()
             sut = PostgresUserRepository(pool)
+
+            # and
+            user_id = uuid4()
 
             # when
             user_from_db = await sut.find_by_id(user_id)
@@ -145,9 +155,70 @@ class TestPostgresUserRepository:
     ) -> None:
         async with DatabaseTest() as pool:
             # given
-            user_id = cast(UUID, faker.boolean())
             sut = PostgresUserRepository(pool)
+
+            # and
+            user_id = cast(UUID, faker.boolean())
 
             # when/then
             with pytest.raises(DatabaseError):
                 await sut.find_by_id(user_id)
+
+    @pytest.mark.it("Should update an user (return none)")
+    async def test_update(self) -> None:
+        async with DatabaseTest() as pool:
+            # given
+            client = AuthDatabaseClient(pool)
+            sut = PostgresUserRepository(pool)
+
+            # and
+            user = UserBuilder().build()
+            await client.create_user(user)
+
+            # and
+            user_to_update = UserBuilder().with_id(user.id).build()
+
+            # when
+            await sut.update(user_to_update)
+
+            # then
+            user_from_db = await client.select_user(user.id)
+
+            # and
+            assert user_to_update == user_from_db
+
+    @pytest.mark.it("Should NOT update an user (raise database error)")
+    async def test_update_database_error(self) -> None:
+        async with DatabaseTest() as pool:
+            # given
+            client = AuthDatabaseClient(pool)
+            sut = PostgresUserRepository(pool)
+
+            # and
+            user = UserBuilder().build()
+            await client.create_user(user)
+
+            # and
+            current_user = UserBuilder().build()
+            await client.create_user(current_user)
+
+            # and
+            user_to_update = (
+                UserBuilder()
+                .with_id(current_user.id)
+                .with_email(user.email)
+                .build()
+            )
+
+            # when/then
+            with pytest.raises(DatabaseError) as exc_info:
+                await sut.update(user_to_update)
+
+            # and
+            error = exc_info.value
+            assert isinstance(error.error, errors.UniqueViolation)
+            assert str(error)
+
+            # and
+            unique_violation = "23505"
+            assert error.error.diag.sqlstate == unique_violation

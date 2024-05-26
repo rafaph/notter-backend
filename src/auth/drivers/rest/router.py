@@ -7,16 +7,23 @@ from src.auth.drivers.rest.dependencies import (
     get_authenticate_input,
     get_authenticate_use_case,
     get_create_user_use_case,
-    get_user_from_token,
+    get_current_user,
+    get_update_user_use_case,
 )
 from src.auth.use_cases.authenticate_use_case import AuthenticateUseCase
 from src.auth.use_cases.create_user_use_case import CreateUserUseCase
-from src.auth.use_cases.inputs import AuthenticateInput, CreateUserInput
+from src.auth.use_cases.inputs import (
+    AuthenticateInput,
+    CreateUserInput,
+    UpdateUserInput,
+)
 from src.auth.use_cases.output import (
     AuthenticateOutput,
     CreateUserOutput,
     GetProfileOutput,
+    UpdateUserOutput,
 )
+from src.auth.use_cases.update_user_use_case import UpdateUserUseCase
 from src.common.drivers.rest.errors import ErrorResponse
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -94,9 +101,43 @@ async def post_token(
     },
 )
 def get_profile(
-    user: Annotated[
+    current_user: Annotated[
         User,
-        Depends(get_user_from_token),
+        Depends(get_current_user),
     ],
 ) -> GetProfileOutput:
-    return GetProfileOutput.from_user(user)
+    return GetProfileOutput.from_user(current_user)
+
+
+@router.post(
+    "/profile",
+    status_code=status.HTTP_200_OK,
+    response_model=GetProfileOutput,
+    summary="Update authenticated user profile",
+    responses={
+        status.HTTP_200_OK: {
+            "description": "User updated profile data",
+            "model": UpdateUserOutput,
+        },
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "Not authorized",
+            "model": ErrorResponse,
+        },
+        status.HTTP_409_CONFLICT: {
+            "description": "Email already in use",
+            "model": ErrorResponse,
+        },
+    },
+)
+async def post_profile(
+    data: UpdateUserInput,
+    current_user: Annotated[
+        User,
+        Depends(get_current_user),
+    ],
+    update_user: Annotated[
+        UpdateUserUseCase,
+        Depends(get_update_user_use_case),
+    ],
+) -> UpdateUserOutput:
+    return await update_user(current_user, data)

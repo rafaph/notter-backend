@@ -20,3 +20,6 @@ class AuthenticateOutput(BaseModel):
 
 
 class GetProfileOutput(CreateUserOutput): ...
+
+
+class UpdateUserOutput(CreateUserOutput): ...

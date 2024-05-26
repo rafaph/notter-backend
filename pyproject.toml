@@ -53,6 +53,7 @@ lint = {composite = ["lint-ruff", "lint-mypy"]}
 test = "pytest tests"
 test-cov = "pytest tests -n auto --cov-branch --cov-fail-under=99 --cov=src --cov-report term --cov-report xml:coverage/coverage.xml --cov-report html:coverage --cov-report lcov:coverage/lcov.info"
 post_install = "pre-commit install -f --install-hooks"
+migrate = {shell="goose --dir migrations postgres $DATABASE_URL up"}
 start = "python main.py"
 
 [tool.ruff]

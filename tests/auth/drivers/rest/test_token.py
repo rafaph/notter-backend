@@ -15,15 +15,15 @@ class TestToken:
     async def test_token_ok(self, faker: Faker) -> None:
         async with ServerTest() as (http_client, pool):
             # given
-            raw_password = faker.password()
-            user = UserBuilder().with_hashed_password(raw_password).build()
+            auth_client = AuthHttpClient(http_client)
+            auth_database_client = AuthDatabaseClient(pool)
 
             # and
-            auth_database_client = AuthDatabaseClient(pool)
+            raw_password = faker.password()
+            user = UserBuilder().with_hashed_password(raw_password).build()
             await auth_database_client.create_user(user)
 
             # and
-            auth_client = AuthHttpClient(http_client)
             body: dict[str, object] = {
                 "username": user.email,
                 "password": raw_password,
@@ -51,6 +51,8 @@ class TestToken:
         async with ServerTest() as (http_client, _):
             # given
             auth_client = AuthHttpClient(http_client)
+
+            # and
             body: dict[str, object] = {
                 "username": faker.email(),
                 "password": faker.password(),
@@ -74,15 +76,15 @@ class TestToken:
     async def test_token_unauthorized_password(self, faker: Faker) -> None:
         async with ServerTest() as (http_client, pool):
             # given
-            raw_password = faker.password()
-            user = UserBuilder().with_hashed_password(raw_password).build()
+            auth_client = AuthHttpClient(http_client)
+            auth_database_client = AuthDatabaseClient(pool)
 
             # and
-            auth_database_client = AuthDatabaseClient(pool)
+            raw_password = faker.password()
+            user = UserBuilder().with_hashed_password(raw_password).build()
             await auth_database_client.create_user(user)
 
             # and
-            auth_client = AuthHttpClient(http_client)
             body: dict[str, object] = {
                 "username": user.email,
                 "password": faker.password(),

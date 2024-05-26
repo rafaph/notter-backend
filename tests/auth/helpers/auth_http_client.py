@@ -11,6 +11,18 @@ class AuthHttpClient:
     async def token(self, body: dict[str, object]) -> httpx.Response:
         return await self._client.post("/auth/token", data=body)
 
-    async def profile(self, token: str | None = None) -> httpx.Response:
+    async def get_profile(self, token: str | None = None) -> httpx.Response:
         headers = {"Authorization": f"Bearer {token}"} if token else None
         return await self._client.get("/auth/profile", headers=headers)
+
+    async def post_profile(
+        self,
+        token: str | None = None,
+        body: dict[str, object] | None = None,
+    ) -> httpx.Response:
+        headers = {"Authorization": f"Bearer {token}"} if token else None
+        return await self._client.post(
+            "/auth/profile",
+            headers=headers,
+            json=body,
+        )

@@ -65,3 +65,22 @@ class PostgresUserRepository(PostgresRepository, UserRepository):
             return None
 
         return User.model_validate(result[0])
+
+    async def update(self, user: User) -> None:
+        try:
+            await self._query(
+                """
+                UPDATE users
+                SET
+                    email = %(email)s,
+                    password = %(password)s,
+                    first_name = %(first_name)s,
+                    last_name = %(last_name)s,
+                    updated_at = %(updated_at)s,
+                    created_at = %(created_at)s
+                WHERE id = %(id)s;
+                """,
+                user.model_dump(),
+            )
+        except errors.Error as error:
+            raise DatabaseError(error) from error

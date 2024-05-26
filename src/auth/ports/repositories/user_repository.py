@@ -17,3 +17,7 @@ class UserRepository(ABC):
     @abstractmethod
     def find_by_id(self, user_id: UUID) -> Awaitable[User | None]:
         raise NotImplementedError  # pragma: no cover
+
+    @abstractmethod
+    def update(self, user: User) -> Awaitable[None]:
+        raise NotImplementedError  # pragma: no cover

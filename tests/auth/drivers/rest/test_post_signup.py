@@ -13,13 +13,15 @@ from tests.helpers.server_test import ServerTest
 
 @pytest.mark.anyio(scope="class")
 @pytest.mark.describe("POST /auth/signup")
-class TestSignup:
+class TestPostSignup:
     @pytest.mark.it(f"Should return {status.HTTP_200_OK} OK")
     async def test_signup_ok(self) -> None:
         async with ServerTest() as (http_client, pool):
             # given
             auth_client = AuthHttpClient(http_client)
             auth_database_client = AuthDatabaseClient(pool)
+
+            # and
             body = CreateUserInputBuilder().build_dict()
 
             # when
@@ -63,8 +65,12 @@ class TestSignup:
             # given
             auth_client = AuthHttpClient(http_client)
             auth_database_client = AuthDatabaseClient(pool)
+
+            # and
             user = UserBuilder().build()
             await auth_database_client.create_user(user)
+
+            # and
             body = CreateUserInputBuilder().with_email(user.email).build_dict()
 
             # when
@@ -85,9 +91,12 @@ class TestSignup:
         async with ServerTest() as (http_client, _):
             # given
             auth_client = AuthHttpClient(http_client)
-            password = faker.password()
+
+            # and
             body = (
-                CreateUserInputBuilder().with_password(password).build_dict()
+                CreateUserInputBuilder()
+                .with_password(faker.password())
+                .build_dict()
             )
 
             # when

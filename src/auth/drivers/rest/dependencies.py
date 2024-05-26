@@ -23,6 +23,7 @@ from src.auth.use_cases.get_user_from_token_use_case import (
     GetUserFromTokenUseCase,
 )
 from src.auth.use_cases.inputs import AuthenticateInput
+from src.auth.use_cases.update_user_use_case import UpdateUserUseCase
 from src.common.drivers.rest.dependencies import get_pool
 from src.common.settings import settings
 
@@ -124,7 +125,7 @@ def get_user_from_token_use_case(
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 
-async def get_user_from_token(
+async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
     get_user: Annotated[
         GetUserFromTokenUseCase,
@@ -132,3 +133,20 @@ async def get_user_from_token(
     ],
 ) -> User:
     return await get_user(token)
+
+
+@cache
+def get_update_user_use_case(
+    user_repository: Annotated[
+        UserRepository,
+        Depends(get_user_repository),
+    ],
+    password_hasher: Annotated[
+        PasswordHasher,
+        Depends(get_password_hasher),
+    ],
+) -> UpdateUserUseCase:
+    return UpdateUserUseCase(
+        user_repository,
+        password_hasher,
+    )
