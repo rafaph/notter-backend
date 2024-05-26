@@ -35,8 +35,8 @@ jobs:
           pdm install --skip=:post
       - name: Install goose
         run: |
-          chmod +x .devcontainer/install-goose.sh
-          sh .devcontainer/install-goose.sh
+          curl -fsSL \
+          https://raw.githubusercontent.com/pressly/goose/master/install.sh | sh
       - name: Lint
         run: pdm run lint
       - name: Test coverage
