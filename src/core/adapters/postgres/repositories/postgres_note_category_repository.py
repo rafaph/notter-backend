@@ -8,7 +8,7 @@ from src.core.ports.repositories.note_category_repository import (
 )
 
 
-class PostgresNoteRepository(NoteCategoryRepository):
+class PostgresNoteCategoryRepository(NoteCategoryRepository):
     def __init__(self, connection: AsyncConnection[DictRow]) -> None:
         self._connection = connection
 

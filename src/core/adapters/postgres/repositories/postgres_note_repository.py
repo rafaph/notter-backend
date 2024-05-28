@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from psycopg import AsyncConnection, errors
 from psycopg.rows import DictRow
 
@@ -35,3 +37,15 @@ class PostgresNoteRepository(NoteRepository):
                 )
         except errors.Error as error:
             raise DatabaseError(error) from error
+
+    async def update(
+        self,
+        note: Note,
+    ) -> None:
+        raise NotImplementedError
+
+    async def delete(
+        self,
+        note_id: UUID,
+    ) -> None:
+        raise NotImplementedError
