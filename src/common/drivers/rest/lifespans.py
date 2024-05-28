@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def setup_async_pool(_app: FastAPI) -> AsyncIterator[None]:
     pool = SingletonAsyncPool.get_instance()
-    await pool.open()
+    await pool.open(wait=True)
     logger.info("Async Connection Pool started...")
     yield
 

@@ -15,10 +15,11 @@ class SingletonAsyncPool:
         if cls._instance is None:
             cls._instance = AsyncConnectionPool(
                 str(settings.DATABASE_URL),
-                open=False,
+                connection_class=AsyncConnection[DictRow],
                 kwargs={
                     "row_factory": dict_row,
                 },
+                open=False,
             )
 
         return cls._instance
