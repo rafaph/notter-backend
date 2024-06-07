@@ -6,13 +6,20 @@ ARG UID=1000
 
 ARG GID=1000
 
-RUN groupadd -f -o -r -g $GID vscode && useradd -ms /bin/bash -o -u $UID -g $GID vscode
+RUN groupadd -f -o -r -g $GID vscode \
+  && useradd -ms /bin/bash -o -u $UID -g $GID vscode
 
 RUN chown -R vscode:vscode /workspace
 
 RUN apt-get update \
-    && apt-get -y install fontconfig fonts-powerline curl git jq \
-    && rm -rf /var/lib/apt/lists/*
+  && apt-get -y install fontconfig fonts-powerline curl git jq locales \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+
+ENV LANG en_US.utf8
+
+ENV LANGUAGE en_US
 
 RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
     && mkdir /commandhistory \
