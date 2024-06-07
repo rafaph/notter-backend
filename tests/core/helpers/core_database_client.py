@@ -18,3 +18,25 @@ class CoreDatabaseClient(AuthDatabaseClient):
             return None
 
         return Note.model_validate(result[0])
+
+    async def create_note(self, note: Note) -> None:
+        await self.query(
+            """
+            INSERT INTO notes (
+                id,
+                user_id,
+                title,
+                content,
+                updated_at,
+                created_at
+            ) VALUES (
+                %(id)s,
+                %(user_id)s,
+                %(title)s,
+                %(content)s,
+                %(updated_at)s,
+                %(created_at)s
+            );
+            """,
+            note.model_dump(),
+        )

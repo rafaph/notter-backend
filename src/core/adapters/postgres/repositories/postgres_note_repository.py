@@ -42,10 +42,36 @@ class PostgresNoteRepository(NoteRepository):
         self,
         note: Note,
     ) -> None:
-        raise NotImplementedError
+        try:
+            async with self._connection.cursor() as cursor:
+                await cursor.execute(
+                    """
+                    UPDATE notes
+                    SET
+                        user_id = %(user_id)s,
+                        title = %(title)s,
+                        content = %(content)s,
+                        updated_at = %(updated_at)s,
+                        created_at = %(created_at)s
+                    WHERE id = %(id)s;
+                    """,
+                    note.model_dump(),
+                )
+        except errors.Error as error:
+            raise DatabaseError(error) from error
 
     async def delete(
         self,
         note_id: UUID,
     ) -> None:
-        raise NotImplementedError
+        try:
+            async with self._connection.cursor() as cursor:
+                await cursor.execute(
+                    """
+                    DELETE FROM notes
+                    WHERE id = %s;
+                    """,
+                    [note_id],
+                )
+        except errors.Error as error:
+            raise DatabaseError(error) from error
