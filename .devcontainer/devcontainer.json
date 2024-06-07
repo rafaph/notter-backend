@@ -3,16 +3,6 @@
     "dockerComposeFile": "docker-compose.yml",
     "service": "devcontainer",
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-    "features": {
-        "ghcr.io/devcontainers/features/python:1": {
-            "version": "3.12",
-            "installTools": "true",
-            "toolsToInstall": "pdm~=2.15"
-        },
-        "ghcr.io/stuartleeks/dev-container-features/shell-history:0": {},
-        "./pdm-shell": {}
-
-    },
     "remoteUser": "vscode",
     "containerEnv": {
         "PDM_IGNORE_ACTIVE_VENV": "1",

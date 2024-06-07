@@ -2,9 +2,12 @@ name: notter-backend
 
 services:
   devcontainer:
-    image: ghcr.io/rafaph/devcontainer-images:base-ubuntu
+    build:
+      dockerfile: devcontainer.Dockerfile
+    hostname: devcontainer
     volumes:
       - ../:/workspaces/notter-backend:cached
+      - commandhistory:/commandhistory
     command: sleep infinity
     depends_on:
       - postgres
@@ -23,3 +26,4 @@ services:
 
 volumes:
   postgres:
+  commandhistory:
