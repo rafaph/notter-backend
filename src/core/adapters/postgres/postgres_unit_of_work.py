@@ -14,11 +14,12 @@ from src.core.ports.unit_of_work import UnitOfWork
 
 
 class PostgresUnitOfWork(UnitOfWork):
+    _connection: AsyncConnection[DictRow]
+
     def __init__(
         self, pool: AsyncConnectionPool[AsyncConnection[DictRow]]
     ) -> None:
         self._pool = pool
-        self._connection: AsyncConnection[DictRow] | None = None
 
     async def __aenter__(self) -> Self:
         self._connection = await self._pool.getconn()
@@ -36,14 +37,11 @@ class PostgresUnitOfWork(UnitOfWork):
         exc_tb: TracebackType | None,
     ) -> None:
         await super().__aexit__(exc_type, exc_val, exc_tb)
-        if self._connection:
-            await self._connection.close()
-            await self._pool.putconn(self._connection)
+        await self._connection.close()
+        await self._pool.putconn(self._connection)
 
     async def commit(self) -> None:
-        if self._connection:
-            await self._connection.commit()
+        await self._connection.commit()
 
     async def rollback(self) -> None:
-        if self._connection:
-            await self._connection.rollback()
+        await self._connection.rollback()

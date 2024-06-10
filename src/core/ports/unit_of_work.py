@@ -24,8 +24,8 @@ class UnitOfWork(ABC):
 
     @abstractmethod
     def commit(self) -> Awaitable[None]:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def rollback(self) -> Awaitable[None]:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
