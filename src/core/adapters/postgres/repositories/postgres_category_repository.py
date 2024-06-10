@@ -40,10 +40,35 @@ class PostgresCategoryRepository(CategoryRepository):
         self,
         category: Category,
     ) -> None:
-        raise NotImplementedError
+        try:
+            async with self._connection.cursor() as cursor:
+                await cursor.execute(
+                    """
+                    UPDATE categories
+                    SET
+                        user_id = %(user_id)s,
+                        name = %(name)s,
+                        updated_at = %(updated_at)s,
+                        created_at = %(created_at)s
+                    WHERE id = %(id)s;
+                    """,
+                    category.model_dump(),
+                )
+        except errors.Error as error:
+            raise DatabaseError(error) from error
 
     async def delete(
         self,
         category_id: UUID,
     ) -> None:
-        raise NotImplementedError
+        try:
+            async with self._connection.cursor() as cursor:
+                await cursor.execute(
+                    """
+                    DELETE FROM categories
+                    WHERE id = %s;
+                    """,
+                    [category_id],
+                )
+        except errors.Error as error:
+            raise DatabaseError(error) from error
