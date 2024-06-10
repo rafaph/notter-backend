@@ -27,7 +27,7 @@ class PostgresNoteCategoryRepository(NoteCategoryRepository):
                         note_id,
                         category_id,
                         updated_at,
-                        created_at,
+                        created_at
                     ) VALUES (
                         %(note_id)s,
                         %(category_id)s,
