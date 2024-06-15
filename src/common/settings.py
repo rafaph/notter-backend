@@ -9,11 +9,6 @@ from pydantic import BaseModel, PostgresDsn, ValidationError, computed_field
 logger = logging.getLogger(__name__)
 
 
-class InvalidSettingsError(Exception):
-    def __init__(self, msg: str = "Invalid settings") -> None:
-        super().__init__(msg)
-
-
 class EnvEnum(str, Enum):
     dev = "dev"
     prod = "prod"
