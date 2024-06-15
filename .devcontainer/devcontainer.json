@@ -24,7 +24,7 @@
                 "EditorConfig.EditorConfig",
                 "tamasfe.even-better-toml",
                 "natqe.reload",
-                "cweijan.vscode-postgresql-client2@7.3.8",
+                "cweijan.vscode-postgresql-client2",
                 "ms-vscode.live-server"
             ],
             "settings": {
