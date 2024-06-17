@@ -17,7 +17,7 @@ from src.auth.use_cases.inputs import (
     CreateUserInput,
     UpdateUserInput,
 )
-from src.auth.use_cases.output import (
+from src.auth.use_cases.outputs import (
     AuthenticateOutput,
     CreateUserOutput,
     GetProfileOutput,

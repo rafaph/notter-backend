@@ -25,6 +25,7 @@ from src.auth.use_cases.get_user_from_token_use_case import (
 from src.auth.use_cases.inputs import AuthenticateInput
 from src.auth.use_cases.update_user_use_case import UpdateUserUseCase
 from src.common.drivers.rest.dependencies import get_pool
+from src.common.drivers.rest.model_validate import model_validate
 from src.common.settings import settings
 
 
@@ -99,9 +100,12 @@ def get_authenticate_input(
         Depends(),
     ],
 ) -> AuthenticateInput:
-    return AuthenticateInput(
-        email=form_data.username,
-        password=form_data.password,
+    return model_validate(
+        AuthenticateInput,
+        {
+            "email": form_data.username,
+            "password": form_data.password,
+        },
     )
 
 

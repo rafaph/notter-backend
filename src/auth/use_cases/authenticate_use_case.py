@@ -5,7 +5,7 @@ from src.auth.ports.password_hasher import PasswordHasher
 from src.auth.ports.repositories.user_repository import UserRepository
 from src.auth.use_cases.errors import InvalidCredentialsError
 from src.auth.use_cases.inputs import AuthenticateInput
-from src.auth.use_cases.output import AuthenticateOutput
+from src.auth.use_cases.outputs import AuthenticateOutput
 from src.common.datetime import Datetime
 from src.common.settings import settings
 
