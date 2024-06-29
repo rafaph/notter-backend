@@ -14,7 +14,12 @@ class DatabaseTest:
 
     def __init__(self) -> None:
         self._database_name = "".join(self._faker.random_letters(60)).lower()
-        self._base_connection_str = "postgres://admin:admin@postgres:5432"
+        host = (
+            "localhost"
+            if os.environ.get("CI", "false") == "true"
+            else "postgres"
+        )
+        self._base_connection_str = f"postgres://admin:admin@{host}:5432"
         self.pool: AsyncConnectionPool[AsyncConnection[DictRow]] | None = None
 
     async def up(self) -> None:
