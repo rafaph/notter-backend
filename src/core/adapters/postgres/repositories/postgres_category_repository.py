@@ -9,7 +9,10 @@ from src.core.ports.repositories.category_repository import CategoryRepository
 
 
 class PostgresCategoryRepository(CategoryRepository):
-    def __init__(self, connection: AsyncConnection[DictRow]) -> None:
+    def __init__(
+        self,
+        connection: AsyncConnection[DictRow],
+    ) -> None:
         self._connection = connection
 
     async def create(self, category: Category) -> None:
@@ -72,3 +75,24 @@ class PostgresCategoryRepository(CategoryRepository):
                 )
         except errors.Error as error:
             raise DatabaseError(error) from error
+
+    async def exists(
+        self,
+        name: str,
+        user_id: UUID,
+    ) -> bool:
+        try:
+            async with self._connection.cursor() as cursor:
+                result_cursor = await cursor.execute(
+                    """
+                    SELECT name FROM categories
+                    WHERE user_id = %s
+                    AND name = %s;
+                    """,
+                    [user_id, name],
+                )
+                result = await result_cursor.fetchall()
+        except errors.Error as error:
+            raise DatabaseError(error) from error
+
+        return len(result) > 0

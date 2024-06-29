@@ -37,7 +37,6 @@ class PostgresUnitOfWork(UnitOfWork):
         exc_tb: TracebackType | None,
     ) -> None:
         await super().__aexit__(exc_type, exc_val, exc_tb)
-        await self._connection.close()
         await self._pool.putconn(self._connection)
 
     async def commit(self) -> None:

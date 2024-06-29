@@ -1,47 +1,28 @@
-from collections.abc import Mapping
-
-from fastapi import Request, status
-from fastapi.responses import JSONResponse
-from starlette.types import ExceptionHandler
+from fastapi import status
 
 from src.auth.use_cases.errors import (
     EmailAlreadyExistsError,
     InvalidCredentialsError,
     InvalidTokenError,
 )
+from src.common.drivers.rest.create_error_handler import create_error_handler
 from src.common.types import ExceptionHandlerEntry
-
-
-def _create_handler(
-    status_code: int,
-    *,
-    headers: Mapping[str, str] | None = None,
-) -> ExceptionHandler:
-    def handler(_request: Request, exc: Exception) -> JSONResponse:
-        return JSONResponse(
-            status_code=status_code,
-            content={"detail": str(exc)},
-            headers=headers,
-        )
-
-    return handler
-
 
 exception_handlers: list[ExceptionHandlerEntry] = [
     (
         EmailAlreadyExistsError,
-        _create_handler(status.HTTP_409_CONFLICT),
+        create_error_handler(status.HTTP_409_CONFLICT),
     ),
     (
         InvalidCredentialsError,
-        _create_handler(
+        create_error_handler(
             status.HTTP_401_UNAUTHORIZED,
             headers={"WWW-Authenticate": "Bearer"},
         ),
     ),
     (
         InvalidTokenError,
-        _create_handler(
+        create_error_handler(
             status.HTTP_401_UNAUTHORIZED,
             headers={"WWW-Authenticate": "Bearer"},
         ),

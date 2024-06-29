@@ -26,3 +26,11 @@ class CategoryRepository(ABC):
         category_id: UUID,
     ) -> Awaitable[None]:
         raise NotImplementedError  # pragma: no cover
+
+    @abstractmethod
+    def exists(
+        self,
+        name: str,
+        user_id: UUID,
+    ) -> Awaitable[bool]:
+        raise NotImplementedError  # pragma: no cover
