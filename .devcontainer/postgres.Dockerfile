@@ -8,4 +8,6 @@ RUN apt-get update \
       && apt-get install -y postgresql-contrib \
       && rm -rf /var/lib/apt/lists/*
 
-COPY initdb_citext.sh /docker-entrypoint-initdb.d/citext.sh
+RUN mkdir -p /docker-entrypoint-initdb.d
+
+COPY initdb_citext.sh /docker-entrypoint-initdb.d
