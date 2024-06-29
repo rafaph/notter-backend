@@ -14,7 +14,7 @@ jobs:
           postgres_image_tag: 16
           postgres_user: admin
           postgres_password: admin
-          postgres_db: notter
+          app_db: notter
           postgres_extensions: citext
           exposed_postgres_port: 5432
       - uses: actions/checkout@v4
